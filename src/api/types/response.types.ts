@@ -3,7 +3,7 @@ export interface ValidationFieldError<T> {
   message: string;
 }
 
-export interface ResponseErrorsI<T> {
+export interface ResponseErrorsI<T = any> {
   statusCode?: number;
   message?: string;
   error?: string; // NestHTTP & Database Errors

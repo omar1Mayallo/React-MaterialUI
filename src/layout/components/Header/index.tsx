@@ -6,6 +6,7 @@ import LangIcon from "./components/LangIcon";
 import NotificationIconDropDown from "./components/NotificationIcon";
 import ThemeIcon from "./components/ThemeIcon";
 import UserIconDropDown from "./components/UserIconDropDown";
+import { grey } from "@mui/material/colors";
 
 export default function Header() {
   const { isOpen, toggleSideNav } = useSideDrawerStore();
@@ -16,6 +17,7 @@ export default function Header() {
       sx={{
         boxShadow: "none",
         borderBottom: 1,
+        bgcolor: grey["900"],
       }}
     >
       <Toolbar>

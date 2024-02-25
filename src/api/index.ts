@@ -31,9 +31,13 @@ api.interceptors.response.use(
       error.response &&
       (error.response.status === 401 || error.response.status === 403)
     ) {
+      enqueueSnackbar(error.response?.data?.message, { variant: "error" });
       Cookies.remove("token");
-      enqueueSnackbar("Access Denied", { variant: "error" });
-      window.location.href = "/login";
+
+      // enqueueSnackbar("Access Denied", { variant: "error" });
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1000);
     }
     return Promise.reject(error);
   },

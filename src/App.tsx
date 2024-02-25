@@ -1,68 +1,81 @@
-import { useQuery } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import Cookies from "js-cookie";
-import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
-import { getData } from "./api/methods";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./app/authentication/pages/login";
 import Register from "./app/authentication/pages/register";
 import Plan from "./app/billing-manager/plan";
 import ShortCode from "./app/billing-manager/short-code";
 import Subscriptions from "./app/billing-manager/subscription";
 import Dashboard from "./app/dashboard";
+import useGetUserPermissions from "./app/user-manager/permissions/services/permissions.service";
+import useGetLoggedUser from "./app/user-manager/user/profile/services/profile.service";
 import FullPageLoading from "./shared/components/Loaders/FullPageLoading";
 import ProtectedRoutes from "./shared/components/Routes/ProtectedRoutes";
 import PublicRoutes from "./shared/components/Routes/PublicRoutes";
-import { UserModel } from "./shared/types/models/User.model";
-import useUserStore from "./store/user.store";
-
-async function getLoggedUser() {
-  return await getData<UserModel>(`/users/logged`);
-}
+import Roles from "./app/user-manager/role";
+import Users from "./app/user-manager/user/users";
+import Groups from "./app/user-manager/group";
 
 function App() {
-  const { user, setUser, token } = useUserStore();
-  const { data, isLoading } = useQuery<UserModel, AxiosError>({
-    queryKey: ["loggedUser"],
-    queryFn: () => getLoggedUser(),
-    enabled: !!token, // Just trigger if user authenticated
-    staleTime: Infinity, // Consider as Fresh Forever
-    placeholderData: user,
-  });
+  const {
+    data: permissions,
+    isLoading: permissionsLoading,
+    isError,
+    error,
+  } = useGetUserPermissions();
 
-  useEffect(() => {
-    if (data) {
-      setUser(data);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  const loading = permissionsLoading;
+  const firstPermissionsItem = permissions?.entities[0];
+  const redirectPath: string =
+    firstPermissionsItem?.entity_url ||
+    `/${firstPermissionsItem?.entities[0]?.entity_url}`;
 
   return (
     <>
-      {isLoading ? (
+      {loading ? (
         <FullPageLoading />
       ) : (
-        <>
-          <Routes>
-            <Route path="/" element={<PublicRoutes />}>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+        <Routes>
+          <Route
+            path="/"
+            element={<PublicRoutes redirectPath={redirectPath} />}
+          >
+            <Route index element={<Navigate to={"/login"} />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+          </Route>
+
+          <Route element={<ProtectedRoutes inLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/settings" element={<Dashboard />} />
+
+            <Route path="/users-management">
+              <Route path="users" element={<Users />} />
+              <Route path="roles" element={<Roles />} />
+              <Route path="groups" element={<Groups />} />
             </Route>
 
-            <Route element={<ProtectedRoutes inLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/billing-manager/plans" element={<Plan />} />
-              <Route
-                path="/billing-manager/subscriptions"
-                element={<Subscriptions />}
-              />
+            <Route path="/billing-management">
+              <Route path="plans" element={<Plan />} />
+              <Route path="subscriptions" element={<Subscriptions />} />
             </Route>
 
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/short-code" element={<ShortCode />} />
+            <Route path="/products-management">
+              <Route path="products" element={<Plan />} />
+              <Route path="orders" element={<Subscriptions />} />
+              <Route path="categories">
+                <Route path="clothes" element={<Plan />} />
+                <Route path="shoes" element={<Subscriptions />} />
+                <Route path="brands">
+                  <Route path="adidas" element={<Plan />} />
+                  <Route path="nike" element={<Subscriptions />} />
+                </Route>
+              </Route>
             </Route>
-          </Routes>
-        </>
+          </Route>
+
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/short-code" element={<ShortCode />} />
+          </Route>
+        </Routes>
       )}
     </>
   );

@@ -9,7 +9,7 @@ export async function getData<TRes>(url: string, config?: AxiosRequestConfig) {
     },
     ...config,
   });
-  return res.data;
+  return res;
 }
 
 export async function postData<TRes, TData>(url: string, data?: TData) {

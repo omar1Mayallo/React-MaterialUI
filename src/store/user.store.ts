@@ -5,18 +5,22 @@ import Cookies from "js-cookie";
 interface UserState {
   token?: string;
   user?: UserModel;
+  userPermissions?: any;
   setToken: (token: string) => void;
   setUser: (user: UserModel) => void;
+  setUserPermissions: (userPermissions: any) => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
   token: Cookies.get("token"),
   user: undefined,
+  userPermissions: undefined,
   setToken: (token) => {
     Cookies.set("token", token);
     set({ token });
   },
   setUser: (user) => set({ user }),
+  setUserPermissions: (userPermissions: any) => set({ userPermissions }),
 }));
 
 export default useUserStore;

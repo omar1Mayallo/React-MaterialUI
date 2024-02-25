@@ -9,12 +9,13 @@ const ProtectedRoutes = ({ inLayout }: { inLayout?: boolean }) => {
     return <Navigate to="/login" replace />;
   }
 
-  const renderedElement = <Outlet />;
-  if (inLayout) {
-    return <BaseLayout>{renderedElement}</BaseLayout>;
-  } else {
-    return renderedElement;
-  }
+  return inLayout ? (
+    <BaseLayout>
+      <Outlet />
+    </BaseLayout>
+  ) : (
+    <Outlet />
+  );
 };
 
 export default ProtectedRoutes;

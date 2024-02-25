@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-const useCustomPath = () => {
+const useCurrentPath = () => {
   const location = useLocation();
 
   const getPathSegments = () => {
@@ -8,9 +8,12 @@ const useCustomPath = () => {
   };
 
   // Paths
-  const modulePath = "/" + (getPathSegments()[0] || "");
-  const subModulePath = "/" + getPathSegments().slice(0, 2).join("/") || "";
-  const subSubModulePath = "/" + getPathSegments().slice(0, 3).join("/") || "";
+  const modulePath = getPathSegments()[0] || "";
+  const subModulePath = getPathSegments().slice(0, 2).join("/") || "";
+  const subSubModulePath = getPathSegments().slice(0, 3).join("/") || "";
+  const subSubSubModulePath = getPathSegments().slice(0, 4).join("/") || "";
+  const subSubSubSubModulePath = getPathSegments().slice(0, 5).join("/") || "";
+
   const itemPath = location.pathname || "";
 
   // Query Search Params
@@ -24,9 +27,11 @@ const useCustomPath = () => {
     modulePath,
     subModulePath,
     subSubModulePath,
+    subSubSubModulePath,
+    subSubSubSubModulePath,
     itemPath,
     queryParams: queryParamsObject,
   };
 };
 
-export default useCustomPath;
+export default useCurrentPath;

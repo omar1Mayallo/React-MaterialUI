@@ -1,11 +1,4 @@
 import {
-  Note,
-  People,
-  PeopleOutlined,
-  Sailing,
-  Send,
-} from "@mui/icons-material";
-import {
   List,
   Drawer as MuiDrawer,
   styled,
@@ -15,95 +8,18 @@ import {
 import { ThemeTypeE } from "../../../store/theme.store";
 import useSideDrawerStore from "../../store/sidebar.store";
 import SideListItem from "./components/SideListItem";
+import usePermissionsList from "./hooks/usePermissionsList";
 
 const SideDrawer = () => {
-  // Configs
+  // SIDE_DRAWER_CONFIGS
   const theme = useTheme();
-  // SideDrawer State Handlers
-  const { isOpen, toggleSideNav } = useSideDrawerStore();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
 
-  const menuItems = [
-    { name: "Home", url: "/", Icon: Sailing },
-    { name: "Login", url: "/login", Icon: Sailing },
-    { name: "Dashboard", url: "/dashboard", Icon: Send },
-    { name: "Short Code", url: "/short-code", Icon: Note },
-    { name: "Connection Provider", url: "/connection", Icon: People },
-    {
-      name: "Billing Manager",
-      Icon: PeopleOutlined,
-      subItemsMenu: [
-        {
-          name: "Plans",
-          url: "/billing-manager/plans",
-          Icon: Sailing,
-          subPadding: true,
-        },
-        {
-          name: "Subscriptions",
-          url: "/billing-manager/subscriptions",
-          Icon: Sailing,
-          subPadding: true,
-        },
-        {
-          name: "Analytics",
-          Icon: PeopleOutlined,
-          subPadding: true,
-          subItemsMenu: [
-            {
-              name: "Orders",
-              url: "/billing-manager/analytics/orders",
-              // Icon: Sailing,
-              subPadding: true,
-            },
-            {
-              name: "Products",
-              url: "/billing-manager/analytics/products",
-              Icon: Sailing,
-              subPadding: true,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: "Users Manager",
-      Icon: PeopleOutlined,
-      subItemsMenu: [
-        {
-          name: "Roles",
-          url: "/user-manager/roles",
-          Icon: Sailing,
-          subPadding: true,
-        },
-        {
-          name: "Group",
-          url: "/user-manager/groups",
-          // Icon: Sailing,
-          subPadding: true,
-        },
-        {
-          name: "Users",
-          Icon: PeopleOutlined,
-          subPadding: true,
-          subItemsMenu: [
-            {
-              name: "Managers",
-              url: "/user-manager/users/managers",
-              Icon: Sailing,
-              subPadding: true,
-            },
-            {
-              name: "Permissions",
-              url: "/user-manager/users/permissions",
-              Icon: Sailing,
-              subPadding: true,
-            },
-          ],
-        },
-      ],
-    },
-  ];
+  // SIDE_DRAWER_STATE
+  const { isOpen, toggleSideNav } = useSideDrawerStore();
+
+  // SIDE_DRAWER_LIST
+  const { menuList } = usePermissionsList();
 
   return (
     <StyledDrawer
@@ -113,13 +29,17 @@ const SideDrawer = () => {
       isOpened={isOpen}
     >
       <List
-        sx={{ width: "100%", bgcolor: "background.paper", py: 0 }}
+        sx={{
+          width: "100%",
+          height: "100%",
+          py: 0,
+        }}
         component="nav"
         aria-labelledby="nested-list-subheader"
         dense={true}
       >
-        {menuItems.map((item, index) => (
-          <SideListItem key={index} {...item} />
+        {menuList?.map((item: any, idx: number) => (
+          <SideListItem key={idx} {...item} />
         ))}
       </List>
     </StyledDrawer>
@@ -131,7 +51,7 @@ export default SideDrawer;
 const StyledDrawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "isOpened",
 })<{ isOpened: boolean }>(({ isOpened, theme }) => ({
-  width: isOpened ? 240 : 75,
+  width: isOpened ? 250 : 75,
   height: "100%",
   overflow: "auto",
   transition: isOpened

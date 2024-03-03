@@ -7,6 +7,7 @@ import useLoginService from "./services/login.service";
 import useLoginFormData, {
   LoginFormData,
 } from "./validations/login.validation";
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
   // FORM_VALIDATION
@@ -30,6 +31,8 @@ export default function Login() {
     if (token) return navigate("/");
   }, [token, navigate]);
 
+  const { t } = useTranslation();
+
   return (
     <main className="flex h-lvh flex-col items-center justify-center">
       <Container component={"section"} maxWidth="xs">
@@ -42,7 +45,10 @@ export default function Login() {
           <TextField
             inputProps={{ ...register("email") }}
             error={!!errors.email}
-            helperText={errors.email?.message}
+            helperText={
+              errors.email?.message &&
+              t(`${errors.email?.message}`, { ns: "validations" })
+            }
             margin="normal"
             required
             fullWidth
@@ -57,7 +63,10 @@ export default function Login() {
           <TextField
             inputProps={{ ...register("password") }}
             error={!!errors.password}
-            helperText={errors.password?.message}
+            helperText={
+              errors.password?.message &&
+              t(`${errors.password?.message}`, { ns: "validations" })
+            }
             margin="normal"
             required
             fullWidth

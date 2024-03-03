@@ -1,3 +1,5 @@
+import { enqueueSnackbar } from "notistack";
+import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./app/authentication/pages/login";
 import Register from "./app/authentication/pages/register";
@@ -5,33 +7,43 @@ import Plan from "./app/billing-manager/plan";
 import ShortCode from "./app/billing-manager/short-code";
 import Subscriptions from "./app/billing-manager/subscription";
 import Dashboard from "./app/dashboard";
+import Groups from "./app/user-manager/group";
 import useGetUserPermissions from "./app/user-manager/permissions/services/permissions.service";
-import useGetLoggedUser from "./app/user-manager/user/profile/services/profile.service";
-import FullPageLoading from "./shared/components/Loaders/FullPageLoading";
-import ProtectedRoutes from "./shared/components/Routes/ProtectedRoutes";
-import PublicRoutes from "./shared/components/Routes/PublicRoutes";
 import Roles from "./app/user-manager/role";
 import Users from "./app/user-manager/user/users";
-import Groups from "./app/user-manager/group";
+import FullAppLoading from "./shared/components/Loaders/FullAppLoading";
+import ProtectedRoutes from "./shared/components/Routes/ProtectedRoutes";
+import PublicRoutes from "./shared/components/Routes/PublicRoutes";
+import useLoginAPIs from "./app/authentication/pages/login/api/login.api";
 
 function App() {
-  const {
-    data: permissions,
-    isLoading: permissionsLoading,
-    isError,
-    error,
-  } = useGetUserPermissions();
+  const { data: permissions, isLoading, isError } = useGetUserPermissions();
+  const { logout } = useLoginAPIs();
 
-  const loading = permissionsLoading;
-  const firstPermissionsItem = permissions?.entities[0];
-  const redirectPath: string =
-    firstPermissionsItem?.entity_url ||
-    `/${firstPermissionsItem?.entities[0]?.entity_url}`;
+  const firstPermissionsItem =
+    permissions?.entities && permissions?.entities[0];
+  const firstEntityUrl = firstPermissionsItem?.entity_url;
+  const firstModuleEntityUrl =
+    firstPermissionsItem?.entities &&
+    firstPermissionsItem?.entities[0]?.entity_url;
+  const redirectPath: string = firstEntityUrl || firstModuleEntityUrl;
+
+  useEffect(() => {
+    if (isError) {
+      enqueueSnackbar(
+        "Failed to retrieve user permissions. Please try again later.",
+        {
+          variant: "error",
+        },
+      );
+      logout(2000);
+    }
+  }, [isError]);
 
   return (
     <>
-      {loading ? (
-        <FullPageLoading />
+      {isLoading ? (
+        <FullAppLoading />
       ) : (
         <Routes>
           <Route
@@ -42,10 +54,10 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
           </Route>
-
           <Route element={<ProtectedRoutes inLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/settings" element={<Dashboard />} />
+            <Route path="/profile" element={<Dashboard />} />
 
             <Route path="/users-management">
               <Route path="users" element={<Users />} />

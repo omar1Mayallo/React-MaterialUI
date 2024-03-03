@@ -5,10 +5,17 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { grey } from "@mui/material/colors";
 import { ThemeTypeE } from "../../../store/theme.store";
-import useSideDrawerStore from "../../store/sidebar.store";
+import useSideDrawerStore from "../../store/side-drawer.store";
 import SideListItem from "./components/SideListItem";
-import usePermissionsList from "./hooks/usePermissionsList";
+import useSideMenuList from "./hooks/useSideDrawerList";
+import {
+  useLangStyle,
+  useScreenSizeStyle,
+} from "../../../shared/hooks/useStyle";
+import i18next from "i18next";
+import { LanguagesE } from "../../../store/language.store";
 
 const SideDrawer = () => {
   // SIDE_DRAWER_CONFIGS
@@ -19,11 +26,12 @@ const SideDrawer = () => {
   const { isOpen, toggleSideNav } = useSideDrawerStore();
 
   // SIDE_DRAWER_LIST
-  const { menuList } = usePermissionsList();
+  const { sideMenuList } = useSideMenuList();
 
   return (
     <StyledDrawer
-      variant={isLargeScreen ? "permanent" : "temporary"}
+      variant={useScreenSizeStyle("permanent", "temporary")}
+      anchor={useLangStyle("right", "left")}
       open={!isLargeScreen && isOpen ? true : false}
       onClose={toggleSideNav}
       isOpened={isOpen}
@@ -33,12 +41,14 @@ const SideDrawer = () => {
           width: "100%",
           height: "100%",
           py: 0,
+          direction: useLangStyle("rtl", "ltr"),
         }}
         component="nav"
         aria-labelledby="nested-list-subheader"
-        dense={true}
+        dense={false}
       >
-        {menuList?.map((item: any, idx: number) => (
+        {/*eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {sideMenuList?.map((item: any, idx: number) => (
           <SideListItem key={idx} {...item} />
         ))}
       </List>
@@ -51,9 +61,10 @@ export default SideDrawer;
 const StyledDrawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "isOpened",
 })<{ isOpened: boolean }>(({ isOpened, theme }) => ({
-  width: isOpened ? 250 : 75,
+  width: isOpened ? 260 : 75,
   height: "100%",
   overflow: "auto",
+  direction: i18next.language === LanguagesE.AR ? "rtl" : "ltr",
   transition: isOpened
     ? theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
@@ -64,13 +75,12 @@ const StyledDrawer = styled(MuiDrawer, {
         duration: theme.transitions.duration.leavingScreen,
       }),
   "& .MuiDrawer-paper": {
-    color: theme.palette.text.secondary,
-    background:
-      theme.palette.mode === ThemeTypeE.DARK
-        ? theme.palette.background.default
-        : theme.palette.background.paper,
-    position: "static",
+    position: useScreenSizeStyle("static", undefined),
     overflowX: "hidden",
-    borderRight: `1px solid ${theme.palette.text.secondary}`,
+    border: "none",
+    backgroundColor:
+      theme.palette.mode === ThemeTypeE.DARK
+        ? grey["900"]
+        : theme.palette.common.white,
   },
 }));

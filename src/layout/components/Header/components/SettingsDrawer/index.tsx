@@ -9,8 +9,10 @@ import {
   Typography,
   styled,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import LanguageToggles from "./LangToggles";
 import ThemeToggles from "./ThemeToggles";
+import { useLangStyle } from "../../../../../shared/hooks/useStyle";
 
 const drawerWidth = 280;
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -30,6 +32,7 @@ const SettingsDrawer = ({
   open: boolean;
   toggleDrawer: () => void;
 }) => {
+  const { t } = useTranslation(["layout"]);
   return (
     <Drawer
       anchor={anchor}
@@ -37,18 +40,23 @@ const SettingsDrawer = ({
       onClose={toggleDrawer}
       sx={{
         width: drawerWidth,
+        direction: useLangStyle("rtl", "ltr"),
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
         },
       }}
     >
-      <DrawerHeader>
+      <DrawerHeader
+        sx={{
+          display: "flex",
+        }}
+      >
         <Typography variant={"h6"} color={"text.secondary"}>
-          Settings
+          {t("SETTINGS")}
         </Typography>
         <IconButton onClick={toggleDrawer}>
-          <Close />
+          <Close sx={{ color: "text.secondary" }} />
         </IconButton>
       </DrawerHeader>
       <Divider />
@@ -63,14 +71,14 @@ const SettingsDrawer = ({
       >
         <Stack gap={1}>
           <Typography variant="subtitle2" color={"text.secondary"}>
-            Theme
+            {t("THEME")}
           </Typography>
           <ThemeToggles />
         </Stack>
 
         <Stack gap={1}>
           <Typography variant="subtitle2" color={"text.secondary"}>
-            Language
+            {t("LANGUAGE")}
           </Typography>
           <LanguageToggles />
         </Stack>

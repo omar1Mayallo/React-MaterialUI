@@ -1,8 +1,8 @@
-import { enqueueSnackbar } from "notistack";
 import { postData } from "../../../../../api/methods";
+import CACHED_KEYS from "../../../../../shared/constants/query-cached-keys";
 import { UserModel } from "../../../../../shared/types/models/User.model";
-import useUserStore from "../../../../../store/user.store";
 import { LoginFormData } from "../validations/login.validation";
+import { useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 
 interface AuthResponse {
@@ -11,7 +11,7 @@ interface AuthResponse {
 }
 
 const useLoginAPIs = () => {
-  const { setToken, setUser } = useUserStore();
+  const queryClient = useQueryClient();
 
   // LOGIN
   async function login(body: LoginFormData) {
@@ -19,16 +19,20 @@ const useLoginAPIs = () => {
       "/auth/login",
       body,
     );
-    if (res.status === 200) {
-      setToken(res.data.token);
-      setUser(res.data.user);
-      Cookies.set("userId", `${res.data.user.id}`);
-      enqueueSnackbar("Successfully Login", { variant: "success" });
-    }
     return res;
   }
 
-  return { login };
+  function logout(durationToRedirectToLogin: number = 200) {
+    Cookies.remove("token");
+    queryClient.removeQueries({
+      queryKey: [CACHED_KEYS.LOGGED_USER_PERMISSIONS],
+    });
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, durationToRedirectToLogin);
+  }
+
+  return { login, logout };
 };
 
 export default useLoginAPIs;

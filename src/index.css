@@ -6,7 +6,11 @@
 .flex_between {
   @apply flex items-center justify-between;
 }
+.flex_center {
+  @apply flex items-center justify-between;
+}
 
+/*___________ APP_STYLES ___________*/
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -26,7 +30,7 @@ body {
 /*___________ SCROLL_STYLE ___________*/
 /* For WebKit (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-  width: 4px;
+  width: 7px;
 }
 ::-webkit-scrollbar-track {
   background: #f1f1f1;

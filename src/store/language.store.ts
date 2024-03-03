@@ -8,27 +8,19 @@ export enum LanguagesE {
 }
 
 interface LanguageStateI {
-  lang: LanguagesE;
   toggleLang: () => void;
-  setLang: (theme: LanguagesE) => void;
+  setLang: (lang: LanguagesE) => void;
 }
 
-const storedLang = Cookies.get("lang") as LanguagesE;
-
-export const useLangStore = create<LanguageStateI>((set) => ({
-  lang: storedLang || i18next.language,
+export const useLangStore = create<LanguageStateI>((_) => ({
   setLang: (lang) => {
     i18next.changeLanguage(lang);
     Cookies.set("lang", lang);
-    set({ lang });
   },
   toggleLang: () => {
-    set((_) => {
-      const newLanguage =
-        i18next.language === LanguagesE.EN ? LanguagesE.AR : LanguagesE.EN;
-      i18next.changeLanguage(newLanguage);
-      Cookies.set("lang", newLanguage);
-      return { lang: newLanguage };
-    });
+    const newLanguage =
+      i18next.language === LanguagesE.EN ? LanguagesE.AR : LanguagesE.EN;
+    i18next.changeLanguage(newLanguage);
+    Cookies.set("lang", newLanguage);
   },
 }));

@@ -8,6 +8,7 @@ import CACHED_KEYS from "../../../../shared/constants/query-cached-keys";
 export default function useGetUserPermissions() {
   const { getLoggedUserPermissions } = usePermissionsAPIs();
   const { token, userPermissions } = useUserStore();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return useQuery<any, AxiosError<ResponseErrorsI>>({
     queryKey: [CACHED_KEYS.LOGGED_USER_PERMISSIONS],
     queryFn: getLoggedUserPermissions,

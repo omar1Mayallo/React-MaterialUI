@@ -6,9 +6,12 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled, useTheme } from "@mui/material/styles";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import NotificationItem from "./NotificationItem";
+import { useLangStyle } from "../../../../../shared/hooks/useStyle";
 
-const NotificationIconDropDown = () => {
+const NotificationIconDropdown = () => {
+  const { t } = useTranslation(["layout"]);
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -21,7 +24,7 @@ const NotificationIconDropDown = () => {
 
   return (
     <>
-      <Tooltip title="Notifications">
+      <Tooltip title={t("NOTIFICATIONS")}>
         <IconButton
           color="inherit"
           onClick={handleClick}
@@ -55,7 +58,8 @@ const NotificationIconDropDown = () => {
                 display: "block",
                 position: "absolute",
                 top: 0,
-                right: 14,
+                right: useLangStyle(undefined, 14),
+                left: useLangStyle(14, undefined),
                 width: 10,
                 height: 10,
                 bgcolor: "background.paper",
@@ -65,8 +69,14 @@ const NotificationIconDropDown = () => {
             },
           },
         }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{
+          horizontal: useLangStyle("left", "right"),
+          vertical: "top",
+        }}
+        anchorOrigin={{
+          horizontal: useLangStyle("left", "right"),
+          vertical: "bottom",
+        }}
       >
         <Paper
           sx={{
@@ -120,7 +130,7 @@ const NotificationIconDropDown = () => {
   );
 };
 
-export default NotificationIconDropDown;
+export default NotificationIconDropdown;
 
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   "& .MuiBadge-badge": {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as Icons from "@mui/icons-material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
@@ -11,28 +12,32 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConditionalNavLinkWrapper from "../../../../shared/components/Links/ConditionalNavLinkWrapper";
-import useSideDrawerStore from "../../../store/sidebar.store";
+import { IMAGE_REGEX } from "../../../../shared/constants/regex";
+import { LanguagesE } from "../../../../store/language.store";
+import useSideDrawerStore from "../../../store/side-drawer.store";
 import useCurrentPath from "../hooks/useCurrentPath";
+import { useTranslation } from "react-i18next";
 
 export interface SideListItemPropsI {
-  name: string;
+  name: { en: string; ar: string };
   url?: string;
   Icon?: any;
   subPadding?: boolean;
   subItemsMenu?: SideListItemPropsI[];
   module_key?: string;
   entity_key?: string;
+  actions?: object[];
 }
 
 const SideListItem = (props: SideListItemPropsI) => {
   const { name, url, Icon, subPadding, subItemsMenu, module_key, entity_key } =
     props;
+  const { i18n } = useTranslation();
   // SIDE_DRAWER_STATE
   const { isOpen, toggleSideNav } = useSideDrawerStore();
 
   // HANDLE_CURRENT_PATH
-  const { modulePath, subModulePath, subSubModulePath, subSubSubModulePath } =
-    useCurrentPath();
+  const { pathSegments } = useCurrentPath();
 
   // HANDLE_COLLAPSE_STATE
   const navigate = useNavigate();
@@ -57,74 +62,80 @@ const SideListItem = (props: SideListItemPropsI) => {
 
   // ITEM_SELECTED
   const selected =
-    modulePath === (module_key || entity_key) ||
-    subModulePath.split("/")[1] === (module_key || entity_key) ||
-    subSubModulePath.split("/")[2] === (module_key || entity_key) ||
-    subSubSubModulePath.split("/")[3] === (module_key || entity_key);
+    pathSegments.includes(entity_key!) || pathSegments.includes(module_key!);
 
-  // ICON_FROM[@mui/icons-material]
+  // ICON_FROM[@mui/icons-material] or as Image
   const IconComponent: Icons.SvgIconComponent = (Icons as any)[Icon];
+  const iconIsImage = IMAGE_REGEX.test(Icon);
 
   return (
-    <>
-      <ConditionalNavLinkWrapper url={url}>
-        <Tooltip title={!isOpen && name} placement={"right"} arrow>
-          <ListItemButton
-            selected={selected}
-            onClick={subItemsMenu ? handleClick : undefined}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              py: 1.5,
-              ...(subPadding ? { pl: 4 } : {}),
-            }}
+    subItemsMenu?.length !== 0 && (
+      <>
+        <ConditionalNavLinkWrapper url={url}>
+          <Tooltip
+            title={
+              !isOpen && (i18n.language === LanguagesE.AR ? name.ar : name.en)
+            }
+            placement={"right"}
+            arrow
           >
-            <ListItemIcon
+            <ListItemButton
+              selected={selected}
+              onClick={subItemsMenu ? handleClick : undefined}
               sx={{
-                display: !isOpen ? "flex" : "block",
-                justifyContent: !isOpen ? "center" : "initial",
+                display: "flex",
+                justifyContent: "center",
+                py: 1.5,
+                ...(subPadding && {
+                  [i18n.language === LanguagesE.EN ? "pl" : "pr"]: 4,
+                }),
               }}
             >
-              {Icon ? (
-                <IconComponent />
-              ) : module_key ? (
-                <img
-                  src={`/${module_key}.webp`}
-                  alt={"icon"}
-                  loading="lazy"
-                  width={25}
-                  height={25}
+              <ListItemIcon>
+                {Icon &&
+                  (iconIsImage ? (
+                    <img
+                      src={`/${Icon}`}
+                      alt={"icon"}
+                      loading="lazy"
+                      width={25}
+                      height={25}
+                      style={{ ...(!isOpen && { marginInline: "auto" }) }}
+                    />
+                  ) : (
+                    <IconComponent
+                      sx={{ ...(!isOpen && { marginInline: "auto" }) }}
+                    />
+                  ))}
+              </ListItemIcon>
+
+              {isOpen && (
+                <ListItemText
+                  primary={i18n.language === LanguagesE.EN ? name.en : name.ar}
+                  sx={{
+                    textAlign:
+                      i18n.language === LanguagesE.AR ? "right" : "left",
+                  }}
                 />
-              ) : (
-                entity_key && (
-                  <img
-                    src={`/${entity_key}.webp`}
-                    alt={"icon"}
-                    loading="lazy"
-                    width={25}
-                    height={25}
-                  />
-                )
               )}
-            </ListItemIcon>
 
-            {isOpen && <ListItemText primary={name} />}
-
-            {subItemsMenu && isOpen && (open ? <ExpandLess /> : <ExpandMore />)}
-          </ListItemButton>
-        </Tooltip>
-      </ConditionalNavLinkWrapper>
-
-      {subItemsMenu && (
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" dense={true} disablePadding>
-            {subItemsMenu.map((item, idx) => (
-              <SideListItem key={idx} {...item} subPadding />
-            ))}
-          </List>
-        </Collapse>
-      )}
-    </>
+              {subItemsMenu &&
+                isOpen &&
+                (open ? <ExpandLess /> : <ExpandMore />)}
+            </ListItemButton>
+          </Tooltip>
+        </ConditionalNavLinkWrapper>
+        {subItemsMenu && (
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <List component="div" dense={true} disablePadding>
+              {subItemsMenu.map((item, idx) => (
+                <SideListItem key={idx} {...item} subPadding />
+              ))}
+            </List>
+          </Collapse>
+        )}
+      </>
+    )
   );
 };
 

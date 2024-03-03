@@ -31,13 +31,18 @@ api.interceptors.response.use(
       error.response &&
       (error.response.status === 401 || error.response.status === 403)
     ) {
-      enqueueSnackbar(error.response?.data?.message, { variant: "error" });
-      Cookies.remove("token");
-
-      // enqueueSnackbar("Access Denied", { variant: "error" });
+      // If I send error message from backend
+      if (error.response?.data?.message) {
+        enqueueSnackbar(error.response?.data?.message, { variant: "error" });
+      }
+      // else return generic error message
+      else {
+        enqueueSnackbar("Access Denied", { variant: "error" });
+      }
       setTimeout(() => {
+        Cookies.remove("token");
         window.location.href = "/login";
-      }, 1000);
+      }, 2000);
     }
     return Promise.reject(error);
   },

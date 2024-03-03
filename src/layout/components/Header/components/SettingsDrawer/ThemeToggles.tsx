@@ -1,9 +1,15 @@
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import { ThemeTypeE, useThemeStore } from "../../../../../store/theme.store";
+import { useTranslation } from "react-i18next";
+import {
+  useLangStyle,
+  useThemeStyle,
+} from "../../../../../shared/hooks/useStyle";
 
 const ThemeToggles = () => {
-  const { themeType, setTheme } = useThemeStore();
+  const { setTheme } = useThemeStore();
+  const { t } = useTranslation(["layout"]);
   const handleToggleTheme = (nextTheme: ThemeTypeE) => {
     setTheme(nextTheme);
   };
@@ -11,22 +17,28 @@ const ThemeToggles = () => {
   return (
     <Box className="flex">
       <Button
-        sx={{ borderRadius: "22px 0px 0px 22px" }}
+        sx={{
+          borderRadius: useLangStyle("0px 22px 22px 0px", "22px 0px 0px 22px"),
+          gap: useLangStyle(1, 0),
+        }}
         fullWidth
         onClick={() => handleToggleTheme(ThemeTypeE.DARK)}
-        variant={themeType === ThemeTypeE.DARK ? "contained" : "outlined"}
+        variant={useThemeStyle("outlined", "contained")}
         startIcon={<DarkMode />}
       >
-        Dark
+        {t("DARK")}
       </Button>
       <Button
-        sx={{ borderRadius: "0px 22px 22px 0px" }}
+        sx={{
+          borderRadius: useLangStyle("22px 0px 0px 22px", "0px 22px 22px 0px"),
+          gap: useLangStyle(1, 0),
+        }}
         fullWidth
         onClick={() => handleToggleTheme(ThemeTypeE.LIGHT)}
-        variant={themeType === ThemeTypeE.LIGHT ? "contained" : "outlined"}
+        variant={useThemeStyle("contained", "outlined")}
         startIcon={<LightMode />}
       >
-        Light
+        {t("LIGHT")}
       </Button>
     </Box>
   );

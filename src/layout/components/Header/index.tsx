@@ -1,12 +1,12 @@
-import { ChevronLeft, Menu } from "@mui/icons-material";
+import { Close, Menu } from "@mui/icons-material";
 import { AppBar, Box, IconButton, Stack, Toolbar } from "@mui/material";
 import { Link } from "react-router-dom";
-import useSideDrawerStore from "../../store/sidebar.store";
+import { useLangStyle } from "../../../shared/hooks/useStyle";
+import useSideDrawerStore from "../../store/side-drawer.store";
 import LangIcon from "./components/LangIcon";
-import NotificationIconDropDown from "./components/NotificationIcon";
+import NotificationIconDropdown from "./components/NotificationIconDropdown";
 import ThemeIcon from "./components/ThemeIcon";
-import UserIconDropDown from "./components/UserIconDropDown";
-import { grey } from "@mui/material/colors";
+import UserIconDropdown from "./components/UserIconDropdown";
 
 export default function Header() {
   const { isOpen, toggleSideNav } = useSideDrawerStore();
@@ -16,22 +16,20 @@ export default function Header() {
       component={"header"}
       sx={{
         boxShadow: "none",
-        borderBottom: 1,
-        bgcolor: grey["900"],
       }}
     >
       <Toolbar>
         <Stack
-          direction="row"
+          direction={useLangStyle("row-reverse", "row")}
           alignItems="center"
           justifyContent={"space-between"}
           width={"100%"}
         >
           {/* RIGHT_SIDE */}
-          <Box className="flex items-center gap-3">
+          <Stack direction={useLangStyle("row-reverse", "row")} gap={2}>
             {/* MENU_ICON */}
             <IconButton color="inherit" onClick={toggleSideNav}>
-              {isOpen ? <ChevronLeft /> : <Menu />}
+              {isOpen ? <Close /> : <Menu />}
             </IconButton>
             {/* LOGO */}
             <Link to={"/"}>
@@ -43,19 +41,19 @@ export default function Header() {
                 height={40}
               />
             </Link>
-          </Box>
+          </Stack>
 
           {/* LEFT_SIDE */}
-          <Box className="flex items-center gap-2">
+          <Stack direction={useLangStyle("row-reverse", "row")} gap={2}>
             {/* I18N_ICON */}
             <LangIcon />
             {/* THEME_ICON */}
             <ThemeIcon />
             {/* NOTIFICATIONS_ICON_DROPDOWN */}
-            <NotificationIconDropDown />
+            <NotificationIconDropdown />
             {/* USER_ICON_DROPDOWN */}
-            <UserIconDropDown />
-          </Box>
+            <UserIconDropdown />
+          </Stack>
         </Stack>
       </Toolbar>
     </AppBar>

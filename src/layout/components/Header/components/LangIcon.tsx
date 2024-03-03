@@ -1,22 +1,17 @@
 import LanguageIcon from "@mui/icons-material/Language";
 import { IconButton, Tooltip } from "@mui/material";
+import { useLangStore } from "../../../../store/language.store";
 import { useTranslation } from "react-i18next";
 
 const LangIcon = () => {
-  const { i18n } = useTranslation();
-
-  const changeLanguage = () => {
-    const newLanguage = i18n.language === "en" ? "ar" : "en";
-    i18n.changeLanguage(newLanguage);
-  };
+  const toggleLang = useLangStore((s) => s.toggleLang);
+  const { t } = useTranslation(["layout"]);
 
   return (
-    <Tooltip
-      title={i18n.language === "en" ? "Switch to Arabic" : "Switch to English"}
-    >
+    <Tooltip title={t("SWITCH_LANG")}>
       <IconButton
         aria-label="Change Language"
-        onClick={changeLanguage}
+        onClick={toggleLang}
         color="inherit"
       >
         <LanguageIcon />

@@ -5,14 +5,18 @@ import useFormValidation from "../../../../../shared/hooks/useFormValidation";
 const loginSchema = z.object({
   email: z
     .string({
-      required_error: "Email is required",
-      invalid_type_error: "Email must be a string",
+      required_error: "Validation_Errors.REQUIRED",
+      invalid_type_error: "Validation_Errors.INVALID_EMAIL",
     })
-    .email("Please enter a valid email address"),
+    .email("Validation_Errors.INVALID_EMAIL"),
+
   password: z
-    .string({ required_error: "Password is required" })
-    .min(6, "Password must be at least 6 characters long")
-    .max(25, "Password cannot be longer than 25 characters"),
+    .string({
+      required_error: "Validation_Errors.REQUIRED",
+      invalid_type_error: "Validation_Errors.PASSWORD_REGEX",
+    })
+    .min(8, "Validation_Errors.PASSWORD_REGEX")
+    .max(25, "Validation_Errors.PASSWORD_REGEX"),
 });
 
 // LOGIN SCHEMA OBJECT TYPE

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
 import { UserModel } from "../shared/types/models/User.model";
 import Cookies from "js-cookie";

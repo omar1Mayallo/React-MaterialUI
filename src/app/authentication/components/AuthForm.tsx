@@ -41,7 +41,12 @@ export default function AuthForm({
       </Typography>
 
       {/* Form_Body */}
-      <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+      <Box
+        component="form"
+        noValidate
+        onSubmit={handleSubmit}
+        sx={{ mt: 1, gap: 2 }}
+      >
         {/* INPUTS */}
         {children}
 
@@ -49,7 +54,7 @@ export default function AuthForm({
         <Button
           type="submit"
           variant="contained"
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ my: 2 }}
           fullWidth
           disabled={isLoading}
           startIcon={

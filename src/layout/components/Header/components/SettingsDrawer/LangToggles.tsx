@@ -1,8 +1,12 @@
 import { Box, Button } from "@mui/material";
 import { LanguagesE, useLangStore } from "../../../../../store/language.store";
+import { useTranslation } from "react-i18next";
+import { useLangStyle } from "../../../../../shared/hooks/useStyle";
 
 const LanguageToggles = () => {
-  const { lang, setLang } = useLangStore();
+  const { setLang } = useLangStore();
+  const { t } = useTranslation(["layout"]);
+
   const handleToggleLang = (nextLang: LanguagesE) => {
     setLang(nextLang);
   };
@@ -10,20 +14,24 @@ const LanguageToggles = () => {
   return (
     <Box className="flex">
       <Button
-        sx={{ borderRadius: "22px 0px 0px 22px" }}
+        sx={{
+          borderRadius: useLangStyle("0px 22px 22px 0px", "22px 0px 0px 22px"),
+        }}
         fullWidth
         onClick={() => handleToggleLang(LanguagesE.EN)}
-        variant={lang === LanguagesE.EN ? "contained" : "outlined"}
+        variant={useLangStyle("outlined", "contained")}
       >
-        English
+        {t("ENGLISH_LANG")}
       </Button>
       <Button
-        sx={{ borderRadius: "0px 22px 22px 0px" }}
+        sx={{
+          borderRadius: useLangStyle("22px 0px 0px 22px", "0px 22px 22px 0px"),
+        }}
         fullWidth
         onClick={() => handleToggleLang(LanguagesE.AR)}
-        variant={lang === LanguagesE.AR ? "contained" : "outlined"}
+        variant={useLangStyle("contained", "outlined")}
       >
-        العربية
+        {t("ARABIC_LANG")}
       </Button>
     </Box>
   );

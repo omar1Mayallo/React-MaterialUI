@@ -1,8 +1,8 @@
 {
-  "validations": {
-    "required": "This field is required.",
-    "email": "Please enter a valid email address.",
-    "password": "Password must be at least 8 characters long.",
-    "confirmPassword": "Passwords do not match."
+  "Validation_Errors": {
+    "REQUIRED": "{property} id required",
+    "INVALID_EMAIL": "Invalid Email Format",
+    "PASSWORD_REGEX": "Invalid password format. It must contain at least one digit, one lowercase letter, one uppercase letter, one special character, and be between 8 and 25 characters long.",
+    "USERNAME_REGEX": "Invalid username format. It must contain only letters, numbers, underscores, and Arabic characters, with a length between 3 and 30 characters."
   }
 }

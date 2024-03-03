@@ -2,6 +2,52 @@ const Subscriptions = () => {
   return (
     <div>
       <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
+      <h2>Subscriptions</h2>
     </div>
   );
 };

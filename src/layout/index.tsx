@@ -3,16 +3,14 @@ import { ReactNode } from "react";
 import Header from "./components/Header";
 import { Main } from "./components/Main";
 import SideDrawer from "./components/SideDrawer";
+import { useLangStyle } from "../shared/hooks/useStyle";
 
 const BaseLayout = ({ children }: { children: ReactNode }) => {
-  // const isLargeScreen: boolean = useMediaQuery<Theme>((theme) =>
-  //   theme.breakpoints.up("md"),
-  // );
   return (
     <OuterContainer>
       <Header />
       <Toolbar />
-      <InnerContainer>
+      <InnerContainer flexDirection={useLangStyle("row-reverse", "row")}>
         <SideDrawer />
         <Main>{children}</Main>
       </InnerContainer>
@@ -33,6 +31,7 @@ const OuterContainer = styled(Box)`
 
 const InnerContainer = styled(Box)`
   display: flex;
+  ${({ flexDirection }) => `flex-direction: ${flexDirection};`}
   flex: 1;
   overflow: hidden;
   height: inherit;

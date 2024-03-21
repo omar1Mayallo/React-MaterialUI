@@ -8,7 +8,7 @@ const QueryProvider: React.FC<{
 }> = ({ children }) => (
   <QueryClientProvider client={queryClient}>
     {children}
-    <ReactQueryDevtools initialIsOpen={false} />
+    <ReactQueryDevtools initialIsOpen={false} position="top" />
   </QueryClientProvider>
 );
 

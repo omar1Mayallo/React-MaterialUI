@@ -2,7 +2,7 @@
 import { LanguagesE } from "../../store/language.store";
 import { useTranslation } from "react-i18next";
 import { ThemeTypeE, useThemeStore } from "../../store/theme.store";
-import { useMediaQuery, useTheme } from "@mui/material";
+import { Breakpoint, useMediaQuery, useTheme } from "@mui/material";
 
 // Use Style Based On Language
 export function useLangStyle(arStyle: any, enStyle: any) {
@@ -17,8 +17,14 @@ export function useThemeStyle(lightStyle: any, darkStyle: any) {
 }
 
 // Use Style Based On Screen Size
-export function useScreenSizeStyle(lgStyle: any, mdStyle: any) {
+export function useScreenSizeStyle(
+  defaultStyle: any,
+  conditionStyle: any,
+  condition: "up" | "down" | "not" | "only" = "up",
+  breakPoint: Breakpoint = "md",
+) {
   const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up("md"));
-  return isLargeScreen ? lgStyle : mdStyle;
+  const screenSize = useMediaQuery(theme.breakpoints[condition](breakPoint));
+
+  return screenSize ? conditionStyle : defaultStyle;
 }

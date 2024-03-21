@@ -30,7 +30,7 @@ const SideDrawer = () => {
 
   return (
     <StyledDrawer
-      variant={useScreenSizeStyle("permanent", "temporary")}
+      variant={useScreenSizeStyle("temporary", "permanent")}
       anchor={useLangStyle("right", "left")}
       open={!isLargeScreen && isOpen ? true : false}
       onClose={toggleSideNav}
@@ -75,7 +75,7 @@ const StyledDrawer = styled(MuiDrawer, {
         duration: theme.transitions.duration.leavingScreen,
       }),
   "& .MuiDrawer-paper": {
-    position: useScreenSizeStyle("static", undefined),
+    position: useScreenSizeStyle(undefined, "static"),
     overflowX: "hidden",
     border: "none",
     backgroundColor:

@@ -17,5 +17,5 @@ export interface UserModel extends BaseModel {
 
   type: USER_TYPE;
 
-  deletedAt?: Date;
+  deleted_at?: Date;
 }

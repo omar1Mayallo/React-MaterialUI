@@ -7,10 +7,10 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 import "./i18n/config.ts";
 
-import "@fontsource/roboto/300.css"; // Light
-import "@fontsource/roboto/400.css"; // Regular
-import "@fontsource/roboto/500.css"; // Medium
-import "@fontsource/roboto/700.css"; // Bold
+import "@fontsource/cairo/300.css"; // Light
+import "@fontsource/cairo/400.css"; // Regular
+import "@fontsource/cairo/500.css"; // Medium
+import "@fontsource/cairo/700.css"; // Bold
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

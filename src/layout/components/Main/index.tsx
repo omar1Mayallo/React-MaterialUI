@@ -6,7 +6,7 @@ const StyledMain = styled("main")<{ direction: "rtl" | "ltr" }>`
   height: 100%;
   flex: 1;
   overflow: auto;
-  padding: 10px;
+  padding: 25px;
   border: 1px solid rgba(000, 000, 000, 0.3);
   direction: ${(props) => props.direction};
 `;

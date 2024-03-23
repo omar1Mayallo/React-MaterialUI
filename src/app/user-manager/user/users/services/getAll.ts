@@ -7,19 +7,26 @@ import {
 import { UserModel } from "../../../../../shared/types/models/User.model";
 import useUsersAPIs from "../api";
 import useGetAllUsersParamsStore from "../store/useGetAllUsersParams.store";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function useGetAllUsers() {
   const { getAllUsers } = useUsersAPIs();
-  const { pagination, search, sort, status } = useGetAllUsersParamsStore();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { pagination, search, sort, status, type } = useGetAllUsersParamsStore(
+    location,
+    navigate,
+  )();
 
   return useQuery<GetAllResponseI<UserModel>, AxiosError<ResponseErrorsI>>({
     queryKey: [
       "users",
-      pagination.page,
-      pagination.limit,
-      search,
-      sort,
-      status,
+      { page: pagination.page },
+      { limit: pagination.limit },
+      { search },
+      { sort },
+      { status },
+      { type },
     ],
     queryFn: () =>
       getAllUsers({
@@ -28,6 +35,7 @@ export default function useGetAllUsers() {
         ...(search && { search: `[username,email]:${search}` }),
         ...(sort && { sort }),
         ...(status && { status }),
+        ...(type && { type }),
       }),
     placeholderData: keepPreviousData,
   });

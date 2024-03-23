@@ -6,41 +6,50 @@ import {
   TableSortLabel,
 } from "@mui/material";
 import { Key } from "react";
-import { TableHeadCell } from "../../types/Interfaces/TableCellHead.interface";
-import SortIcons from "../Icons/SortIcons";
-import useGetAllUsersParamsStore from "../../../app/user-manager/user/users/store/useGetAllUsersParams.store";
+import { TableHeadCell } from "../../../../../shared/types/Interfaces/TableCellHead.interface";
+import SortIcons from "../../../../../shared/components/Icons/SortIcons";
+import useGetAllUsersParamsStore from "../store/useGetAllUsersParams.store";
+import { useLocation, useNavigate } from "react-router-dom";
+import useUserActions from "../../../../../shared/hooks/useUserActions";
 
-export interface TableHeadProps {
+export interface TableHeaderProps {
   headCells: TableHeadCell<any>[];
+  rowCount: number;
   numSelected: number;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  rowCount: number;
 }
 
-export default function TableHead({
+export default function TableHeader({
   headCells,
   numSelected,
   rowCount,
   onSelectAllClick,
-}: TableHeadProps) {
-  const { sort, handleSort } = useGetAllUsersParamsStore();
+}: TableHeaderProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { sort, handleSort } = useGetAllUsersParamsStore(location, navigate)();
+  const { isHaveNotDeleteAction } = useUserActions("users");
+
   return (
     <MuiTableHead>
       <TableRow>
+        {/* SELECT_ALL_CHECKBOX */}
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
+            disabled={isHaveNotDeleteAction}
           />
         </TableCell>
+
+        {/* REST_TABLES_HEAD_CELLS */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id as Key}
             align={headCell.numeric ? "center" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
-            // sortDirection={sort === headCell.id ? "asc" : false}
           >
             <TableSortLabel
               active={sort.replace(/-/g, "") === headCell.id}
@@ -59,11 +68,6 @@ export default function TableHead({
               }
             >
               {headCell.label}
-              {/* {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null} */}
             </TableSortLabel>
           </TableCell>
         ))}

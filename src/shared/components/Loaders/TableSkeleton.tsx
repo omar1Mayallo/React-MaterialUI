@@ -13,7 +13,7 @@ import generateArrOfNum from "../../helpers/generateArrOfNum";
 const TableSkeleton = ({ rows = 6, columns = 5 }) => {
   return (
     <>
-      <Stack direction={"row"} justifyContent={"end"} gap={1} my={2}>
+      <Stack direction={"row"} justifyContent={"end"} gap={1} my={3}>
         <Skeleton variant="circular" width={40} height={40} />
         <Skeleton variant="circular" width={40} height={40} />
       </Stack>

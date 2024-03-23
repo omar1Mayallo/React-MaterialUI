@@ -48,6 +48,25 @@ export const usersHeadCells: TableHeadCell<UserModel>[] = [
     numeric: true,
     disablePadding: false,
     label: "Created At",
-    sortable: true,
+    sortable: false,
   },
+  {
+    id: "actions",
+    numeric: true,
+    disablePadding: false,
+    label: "Actions",
+    sortable: false,
+  },
+];
+
+export const menuStatusItems = [
+  { label: "All", value: "ALL" },
+  { label: "Active", value: "ACTIVE" },
+  { label: "In Active", value: "INACTIVE" },
+];
+
+export const menuTypesItems = [
+  { label: "All", value: "ALL" },
+  { label: "Administrative", value: "ADMINISTRATIVE" },
+  { label: "Portal", value: "PORTAL" },
 ];

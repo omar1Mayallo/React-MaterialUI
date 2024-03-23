@@ -1,5 +1,5 @@
+import { Location, NavigateFunction } from "react-router-dom";
 import { create } from "zustand";
-import { useLocation } from "react-router-dom";
 
 interface PaginationParams {
   page: number;
@@ -11,58 +11,115 @@ interface GetAllUsersParamsStore {
   search: string;
   sort: string;
   status: string;
+  type: string;
   handlePagination: (page: number) => void;
   handleChangeLimit: (limit: number) => void;
   handleSearch: (search: string) => void;
   handleSort: (sort: string) => void;
   handleStatus: (status: string) => void;
+  handleType: (type: string) => void;
 }
 
-// !ACCESS LOCATION PARAMS BY PASS IT TO THE FUNCTION PARAMS
-const useGetAllUsersParamsStore = create<GetAllUsersParamsStore>((set) => {
-  return {
+const useGetAllUsersParamsStore = (
+  location: Location,
+  navigate: NavigateFunction,
+) => {
+  const params = new URLSearchParams(location.search);
+  return create<GetAllUsersParamsStore>((set) => ({
     pagination: {
-      page: 1,
-      limit: 5,
+      page: parseInt(params.get("page") || "1", 10),
+      limit: parseInt(params.get("limit") || "5", 10),
+    },
+    search: params.get("search") || "",
+    sort: params.get("sort") || "",
+    status: params.get("status") || "",
+    type: params.get("type") || "",
+
+    handleType: (type: string) => {
+      if (type) {
+        params.set("page", "1");
+        params.set("type", type);
+        navigate({
+          pathname: location.pathname,
+          search: params.toString(),
+        });
+      } else {
+        params.delete("type");
+        navigate({
+          pathname: location.pathname,
+          search: params.toString(),
+        });
+      }
     },
 
-    search: "",
+    handleSearch: (search: string) => {
+      if (search) {
+        params.set("page", "1");
+        params.set("search", search);
+        navigate({
+          pathname: location.pathname,
+          search: params.toString(),
+        });
+      } else {
+        params.delete("search");
+        navigate({
+          pathname: location.pathname,
+          search: params.toString(),
+        });
+      }
+    },
 
-    sort: "",
+    handleStatus: (status: string) => {
+      if (status) {
+        params.set("page", "1");
+        params.set("status", status);
+        navigate({
+          pathname: location.pathname,
+          search: params.toString(),
+        });
+      } else {
+        params.delete("status");
+        navigate({
+          pathname: location.pathname,
+          search: params.toString(),
+        });
+      }
+    },
 
-    status: "",
+    handleSort: (sortKey: string) => {
+      const currentSort = params.get("sort");
+      const newSort =
+        currentSort === sortKey
+          ? `-${sortKey}`
+          : currentSort === `-${sortKey}`
+            ? sortKey
+            : `-${sortKey}`;
 
-    handleStatus: (status: string) =>
-      set((state) => ({
-        ...state,
-        pagination: { ...state.pagination, page: 1 },
-        status,
-      })),
+      params.set("page", "1");
+      params.set("sort", newSort);
+      navigate({
+        pathname: location.pathname,
+        search: params.toString(),
+      });
+    },
 
-    handleSort: (sortKey: string) =>
-      set((state) => ({
-        ...state,
-        sort:
-          state.sort === sortKey
-            ? `-${sortKey}`
-            : state.sort === `-${sortKey}`
-              ? sortKey
-              : `-${sortKey}`,
-      })),
+    handlePagination: (page: number) => {
+      params.set("page", `${page}`);
+      navigate({
+        pathname: location.pathname,
+        search: params.toString(),
+      });
+    },
 
-    handleSearch: (search: string) =>
-      set((state) => ({
-        ...state,
-        pagination: { ...state.pagination, page: 1 },
-        search,
-      })),
-
-    handlePagination: (page: number) =>
-      set((state) => ({ pagination: { ...state.pagination, page } })),
-
-    handleChangeLimit: (limit: number) =>
-      set((state) => ({ pagination: { ...state.pagination, page: 1, limit } })),
-  };
-});
+    handleChangeLimit: (limit: number) => {
+      params.set("page", `1`);
+      params.set("limit", `${limit}`);
+      navigate({
+        pathname: location.pathname,
+        search: params.toString(),
+      });
+    },
+  }));
+};
 
 export default useGetAllUsersParamsStore;

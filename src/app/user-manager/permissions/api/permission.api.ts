@@ -2,19 +2,26 @@ import { getData } from "../../../../api/methods";
 import useUserStore from "../../../../store/user.store";
 
 const usePermissionsAPIs = () => {
-  const setUserPermissions = useUserStore((s) => s.setUserPermissions);
+  const { setUserPermissions, setUserActions } = useUserStore();
   // GET Logged User Permissions
   async function getLoggedUserPermissions() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const res = await getData<any>("/permissions/logged-user");
-
     if (res.status === 200) {
       setUserPermissions(res.data);
     }
     return res.data;
   }
 
-  return { getLoggedUserPermissions };
+  // GET Logged User Actions
+  async function getLoggedUserActions() {
+    const res = await getData<string[]>("/permissions/logged-user-actions");
+    if (res.status === 200) {
+      setUserActions(res.data);
+    }
+    return res.data;
+  }
+
+  return { getLoggedUserPermissions, getLoggedUserActions };
 };
 
 export default usePermissionsAPIs;

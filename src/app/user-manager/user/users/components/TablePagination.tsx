@@ -1,22 +1,26 @@
-import { Link, useLocation } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
-import { useLangStyle, useScreenSizeStyle } from "../../shared/hooks/useStyle";
-import useGetAllUsersParamsStore from "../user-manager/user/users/store/useGetAllUsersParams.store";
-import { PaginationDetails } from "../../api/types/response.types";
+import {
+  useLangStyle,
+  useScreenSizeStyle,
+} from "../../../../../shared/hooks/useStyle";
+import useGetAllUsersParamsStore from "../store/useGetAllUsersParams.store";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function CustomPagination({
-  paginationDetails,
+export default function TablePagination({
+  numOfPages,
 }: {
-  paginationDetails: PaginationDetails;
+  numOfPages: number;
 }) {
-  const { pagination, handlePagination } = useGetAllUsersParamsStore();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { pagination, handlePagination } = useGetAllUsersParamsStore(
+    location,
+    navigate,
+  )();
   // const location = useLocation();
   // const query = new URLSearchParams(location.search);
 
-  // console.log(query);
-
-  // const paginateTo = () => {};
   return (
     <Pagination
       sx={{
@@ -25,10 +29,10 @@ export default function CustomPagination({
         },
       }}
       page={pagination.page}
-      count={paginationDetails.numOfPages}
+      count={numOfPages}
       variant="outlined"
       color="primary"
-      size={useScreenSizeStyle("medium", "small", "down", "sm")}
+      size={useScreenSizeStyle("large", "small", "down", "sm")}
       showFirstButton
       showLastButton
       siblingCount={useScreenSizeStyle(0, 1)}

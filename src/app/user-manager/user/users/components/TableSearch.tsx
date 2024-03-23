@@ -1,30 +1,29 @@
+import { Delete, Search } from "@mui/icons-material";
 import {
-  IconButton,
   InputAdornment,
   TextField,
   Toolbar,
-  Tooltip,
   Typography,
   alpha,
 } from "@mui/material";
-import SearchInput from "../../../app/dashboard/SearchField";
-import IconButtonTooltip from "../Buttons/IconButtonTooltip";
 import { red } from "@mui/material/colors";
-import { Delete, Filter, FilterList, Search } from "@mui/icons-material";
-import FilterTable from "../../../app/dashboard/StatusButton";
-import FilterMenu from "../../../app/user-manager/user/users/components/Filter";
+import TableFilterMenu from "./TableFilterMenu";
+import IconButtonTooltip from "../../../../../shared/components/Buttons/IconButtonTooltip";
+import useGetAllUsersParamsStore from "../store/useGetAllUsersParams.store";
+import { useLocation, useNavigate } from "react-router-dom";
 
-interface TableToolbarProps {
+interface TableSearchProps {
   numSelected: number;
-  onSearch: (val: string) => void;
-  searchVal: string;
 }
 
-export default function TableToolbar({
-  numSelected,
-  onSearch,
-  searchVal,
-}: TableToolbarProps) {
+export default function TableSearch({ numSelected }: TableSearchProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { search, handleSearch } = useGetAllUsersParamsStore(
+    location,
+    navigate,
+  )();
+
   return (
     <Toolbar
       sx={{
@@ -68,8 +67,8 @@ export default function TableToolbar({
             },
           }}
           placeholder="Search..."
-          value={searchVal}
-          onChange={(e) => onSearch(e.target.value)}
+          value={search}
+          onChange={(e) => handleSearch(e.target.value)}
         />
       )}
       {numSelected > 0 ? (
@@ -78,9 +77,10 @@ export default function TableToolbar({
           variant={red[500]}
           hover={red[700]}
           Icon={Delete}
+          onClick={() => console.log("Delete Selected")}
         />
       ) : (
-        <FilterMenu />
+        <TableFilterMenu />
       )}
     </Toolbar>
   );
